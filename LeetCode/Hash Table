@@ -27,7 +27,6 @@ class MyHashSet:
 #         Initialize your data structure here.
 #         """
 #         self.box = [False] * 10000000
-
 #     def add(self, key: int) -> None:
         
 #         self.box[key] = True

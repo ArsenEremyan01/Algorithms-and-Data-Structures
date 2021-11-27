@@ -1,0 +1,175 @@
+"""Reverse String"""
+class Solution:
+    def reverseString(self, s: List[str]) -> None:
+        l = 0
+        r = len(s) - 1
+        while l < r:
+            cur = s[r]
+            s[r] = s[l]
+            s[l] = cur
+            r -= 1
+            l += 1
+            
+"""Swap Nodes in Pairs"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def swapPairs(self, head: ListNode) -> ListNode:
+        dummy = ListNode(0)
+        prev = dummy
+        prev.next = head
+        while prev.next and prev.next.next:
+            first = prev.next
+            second = prev.next.next
+            first.next = second.next
+            second.next = first
+            prev.next = second
+            prev = first
+        return dummy.next
+
+"""Reverse Linked List"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        cur_node = head
+        prev_node = None
+        next_node = None
+        
+        while cur_node != None:
+            next_node = cur_node.next
+            cur_node.next = prev_node
+            prev_node = cur_node
+            cur_node = next_node
+            
+        return prev_node
+        
+"""Search in a Binary Search Tree"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def searchBST(self, root: TreeNode, val: int) -> TreeNode:
+        if root:
+            if val > root.val:
+                return self.searchBST(root.right, val)
+            if val < root.val:
+                return self.searchBST(root.left, val)
+            else:
+                return root
+        return None
+        
+"""Pascal's Triangle II"""
+class Solution:
+    def getRow(self, rowIndex: int) -> List[int]:
+        if rowIndex == 0:
+            return [1]
+        lastrow = self.getRow(rowIndex-1)
+        res = [1]
+        for i in range(len(lastrow)-1):
+            res.append(lastrow[i] + lastrow[i + 1])
+        res.append(1)
+        return res
+
+"""Fibonacci Number"""
+class Solution:
+    def fib(self, N: int) -> int:
+        hash = {}
+        def rec(N):
+            if N in hash:
+                return hash[N]
+            if N == 1 or N == 0:
+                res = N
+            else:
+                res = rec(N - 1) + rec(N - 2)
+            hash[N] = res
+            return res
+        return rec(N)
+
+"""Climbing Stairs"""
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        # i = 1
+        # a1 = 1
+        # a2 = 1
+        # while i < n:
+        #     total = a1 + a2
+        #     a1, a2 = a2, total
+        #     i += 1
+        # return a2
+
+        res = {}
+        for i in range(n+1):
+            if i <= 2:
+                res[i] = i
+            if i not in res:
+                res[i] = res[i-1] + res[i-2]
+        
+        return res[n]
+        
+"""Merge Two Sorted Lists"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        if l1 is None:
+            return l2
+        
+        if l2 is None:
+            return l1
+        
+        if l1 == None and l2 == None:
+            return 0
+        
+        if l1.val < l2.val:
+            l1.next = self.mergeTwoLists(l1.next, l2)
+            return l1
+        
+        else:
+            l2.next = self.mergeTwoLists(l1, l2.next)
+            return l2
+
+"""K-th Symbol in Grammar"""
+class Solution:
+    def kthGrammar(self, N: int, K: int) -> int:
+        if(N == 1 and K == 1):
+            return 0
+        mid = pow(2,N-2)
+        if K <= mid:
+            return self.kthGrammar(N - 1, K)
+        else:
+             return 1 - self.kthGrammar(N - 1, K - mid)
+
+"""Unique Binary Search Trees II"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def generateTrees(self, n: int) -> List[TreeNode]:
+        if not n: 
+            return []
+        def dfs(low, high):
+            if low > high: 
+                return [None] 
+            res = [] 
+            for i in range(low, high+1): 
+                leftTrees = dfs(low, i - 1)
+                rightTrees = dfs(i + 1, high)
+                res += [TreeNode(i, left, right) for left in leftTrees for right in rightTrees]
+            return res
+        return dfs(1,n)

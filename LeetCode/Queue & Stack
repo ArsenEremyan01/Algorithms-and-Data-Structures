@@ -1,0 +1,458 @@
+"""Design Circular Queue"""
+class MyCircularQueue:
+
+    def __init__(self, k: int):
+        self.head = self.tail = self.size = 0
+        self.max_size = k
+        self.queue = [0 for _ in range(self.max_size)]
+    
+    def enQueue(self, value: int) -> bool:
+        if not self.isFull():
+            self.queue[self.tail] = value
+            self.tail = (self.tail + 1) % len(self.queue)
+            self.size += 1
+            return True
+        else:
+            return False
+
+    def deQueue(self) -> bool:
+        if not self.isEmpty():
+            self.head = (self.head + 1) % len(self.queue)
+            self.size -= 1
+            return True
+        else:
+            return False
+
+    def Front(self) -> int:
+        return self.queue[self.head] if not self.isEmpty() else -1
+    
+    def Rear(self) -> int:
+
+        return self.queue[self.tail -1] if (not self.isEmpty()) else -1
+
+
+    def isEmpty(self) -> bool:
+        return self.size == 0
+    def isFull(self) -> bool:
+        return self.size == self.max_size
+
+
+
+
+# Your MyCircularQueue object will be instantiated and called as such:
+# obj = MyCircularQueue(k)
+# param_1 = obj.enQueue(value)
+# param_2 = obj.deQueue()
+# param_3 = obj.Front()
+# param_4 = obj.Rear()
+# param_5 = obj.isEmpty()
+# param_6 = obj.isFull()
+
+"""Number of Islands""" !!!
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+#         islands = 0
+#         row, col = len(grid),len(grid[0])
+#         visit = [[0]*col for _ in range(row)]
+        
+#         for i in range(row): 
+#             for j in range(col):
+#                 if grid[i][j] == '1' and not visit[i][j]:
+#                     queue = [(i,j)]
+                    
+#                     while len(queue) > 0:
+#                         i1,j1 = queue.pop(0)
+#                         lst = [(i1 + 1,j1),(i1 - 1,j1),(i1,j1 + 1),(i1,j1 - 1)]
+                        
+#                         for x,y in lst:
+#                             if 0 <= x < row and 0 <= y < col and grid[x][y] == '1' and not visit[x][y]:
+#                                 visit[x][y] = 1
+#                                 queue.append((x,y))
+#                     islands += 1
+                            
+#         return islands
+        cnt = 0
+        def dfs(i, j):
+            # print(grid)
+            if grid[i][j] == '0':
+                return
+            grid[i][j] = '0'
+            if i + 1 < len(grid) and grid[i+1][j] == '1':
+                dfs(i+1, j)
+                
+            if i - 1 >= 0 and grid[i-1][j] == '1':
+                dfs(i-1, j)
+                
+            if j - 1 >= 0 and grid[i][j-1] == '1':
+                dfs(i, j-1)
+            
+            
+            if j+1 < len(grid[0]) and grid[i][j+1] == '1':
+                dfs(i, j+1)
+            
+        
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j] == '1':
+                    cnt += 1
+                    # print(i, j)
+                dfs(i, j)
+                
+        return cnt
+
+"""Perfect Squares"""
+class Solution:
+    def numSquares(self, n: int) -> int:
+        if n == 0:
+            return 0
+        dp = [i for i in range(n+1)]
+        for i in range(1,n+1):
+            for j in range(1,i**2):
+                if i - j*j < 0:
+                    break
+                dp[i] = min(dp[i],dp[i-j*j]+1)
+        return dp.pop()
+
+"""Min Stack"""
+class MinStack:
+
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.res = []
+
+    def push(self, x: int) -> None:
+        return self.res.append(x)
+
+    def pop(self) -> None:
+        return self.res.pop()
+
+    def top(self) -> int:
+        return self.res[-1]
+
+    def getMin(self) -> int:
+        return min(self.res)
+
+
+# Your MinStack object will be instantiated and called as such:
+# obj = MinStack()
+# obj.push(x)
+# obj.pop()
+# param_3 = obj.top()
+# param_4 = obj.getMin()
+
+"""Valid Parentheses"""
+class Solution:
+    def isValid(self, s: str) -> bool:
+        left = [')',']','}']
+        right = ['(', '[','{']
+        stack = []
+        for i in s:
+            if i in right:
+                stack.append(i)
+            else:
+                if len(stack) != 0 and stack[-1] == right[left.index(i)]:
+                    stack.pop()
+                else:
+                    return False
+        return len(stack) == 0
+
+"""Daily Temperatures"""
+class Solution:
+    def dailyTemperatures(self, T: List[int]) -> List[int]:
+        ret = [0 for _ in range(len(T))]
+        stack = []
+        i = 0
+        for i in range(len(T)):
+            while stack and T[i] > T[stack[-1]]:
+                index = stack.pop()
+                ret[index] = i-index
+            stack.append(i)
+        return ret
+
+"""Evaluate Reverse Polish Notation"""
+class Solution:
+    def evalRPN(self, tokens: List[str]) -> int:
+        stack = []
+        operators = '+-*/'
+        for i in tokens:
+            if i not in operators:
+                stack.append(int(i))
+            elif len(stack) > 1:
+                first = stack.pop()
+                second = stack.pop()
+                if i == '+':
+                    stack.append(first + second)
+                elif i == '-':
+                    stack.append(second - first)
+                elif i == '*':
+                    stack.append(first * second)
+                elif i == '/':
+                    stack.append(int(second / first))
+        return stack[-1] if stack else 0
+
+"""Clone Graph"""
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val = 0, neighbors = None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
+"""
+from copy import deepcopy
+class Solution:
+    def cloneGraph(self, node: 'Node') -> 'Node':
+        clone = deepcopy(node)
+        return clone
+
+"""Target Sum"""
+class Solution:
+    def findTargetSumWays(self, nums: List[int], S: int) -> int:
+        count = defaultdict(int)
+        count[0] = 1
+        for x in nums:
+            step = defaultdict(int)
+            for y in count:
+                step[y + x] += count[y]
+                step[y - x] += count[y]
+            count = step
+            # print(count)
+
+        return count[S]
+#         res = [0]
+#         def dfs(nums, s, res):
+#             if len(nums) == 1:
+#                 if nums[0] == s:
+#                     res[0] += 1
+#                 if -nums[0] == s:
+#                     res[0] += 1
+#                 return
+#             dfs(nums[1:], s - nums[0], res)
+#             dfs(nums[1:], s + nums[0], res)
+
+#         dfs(nums, S, res)
+
+#         return res[0]
+        
+        # res = {}
+        # def DFS(nums,i,summary):
+        #     if i == len(nums):
+        #         if summary == S:
+        #             res[(i,summary)] = 1
+        #         else:
+        #             res[(i,summary)] = 0
+        #     if (i,summary) not in res:
+        #         res[(i,summary)] = DFS(nums,i+1,summary+nums[i])+ DFS(nums,i+1,summary-nums[i])
+        #     return res[(i,summary)]
+        # DFS(nums,0,0)
+        # return res[(0,0)]
+
+"""Binary Tree Inorder Traversal"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def inorderTraversal(self, root: TreeNode) -> List[int]:
+        res = []
+        def rec(root):
+            if root is None:
+                return []
+            else:
+                rec(root.left)
+                res.append(root.val)
+                rec(root.right)
+        rec(root)
+        return res
+
+"""Implement Queue using Stacks"""
+class MyQueue:
+    def __init__(self):
+        self.input = []
+        self.output = []
+        
+    def push(self, x):
+        self.input.append(x)
+
+    def pop(self):
+        self.peek()
+        return self.output.pop()
+        
+    def peek(self):
+        if(self.output == []):
+            while(self.input != []):
+                self.output.append(self.input.pop())
+        return self.output[-1]
+        
+    def empty(self):
+        return self.input == [] and self.output == []
+
+#     def __init__(self):
+#         """
+#         Initialize your data structure here.
+#         """
+#         self.instack = []
+#         self.outstack = []
+
+#     def push(self, x: int) -> None:
+#         """
+#         Push element x to the back of queue.
+#         """
+#         self.instack.append(x)
+
+#     def pop(self) -> int:
+#         """
+#         Removes the element from in front of queue and returns that element.
+#         """
+#         if not self.outstack:
+#             while self.instack:
+#                 self.outstack.append(self.instack.pop())
+#         return self.outstack.pop()
+
+#     def peek(self) -> int:
+#         """
+#         Get the front element.
+#         """
+#         return self.instack[0]
+
+#     def empty(self) -> bool:
+#         """
+#         Returns whether the queue is empty.
+#         """
+#         return not self.outstack
+        
+
+# Your MyQueue object will be instantiated and called as such:
+# obj = MyQueue()
+# obj.push(x)
+# param_2 = obj.pop()
+# param_3 = obj.peek()
+# param_4 = obj.empty()
+
+"""Implement Stack using Queues"""
+class MyStack:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.qu1 = []
+        self.qu2 = []
+        self.size = len(self.qu1 + self.qu2)
+        
+
+    def push(self, x: int) -> None:
+        """
+        Push element x onto stack.
+        """
+        self.qu1.append(x)
+        
+
+    def pop(self) -> int:
+        """
+        Removes the element on top of the stack and returns that element.
+        """
+        for i in range(self.size):
+#         for i in self.qu1[::-1]:
+#             self.qu2.append(i)
+            self.qu2.append(self.qu1.pop())
+            self.qu1.append(self.qu2.pop())
+        
+        return self.qu1.pop()
+    def top(self) -> int:
+        """
+        Get the top element.
+        """
+        return self.qu1[-1]
+        
+
+    def empty(self) -> bool:
+        """
+        Returns whether the stack is empty.
+        """
+        return len(self.qu1) == 0
+        
+
+
+# Your MyStack object will be instantiated and called as such:
+# obj = MyStack()
+# obj.push(x)
+# param_2 = obj.pop()
+# param_3 = obj.top()
+# param_4 = obj.empty()
+
+"""Decode String"""
+class Solution:
+    def decodeString(self, s: str) -> str:
+        stack = [[1,'']]
+        cur = ''
+        for i in s:
+            if i.isnumeric():
+                cur += i
+            elif i == '[':
+                stack.append([int(cur),''])
+                cur = ''
+            elif i == ']':
+                nums, strs = stack.pop()
+                stack[-1][-1] += nums * strs
+            else:
+                stack[-1][-1] += i
+        return stack[-1][-1]
+
+"""Flood Fill"""
+class Solution:
+    def floodFill(self, image: List[List[int]], sr: int, sc: int, newColor: int) -> List[List[int]]:
+        row,col = len(image),len(image[0])
+        i,j = sr,sc
+        start  = image[i][j]
+        def dfs(image,row,col,i,j):
+            if i < 0 or j < 0 or j > col-1 or i > row-1 or image[i][j] == newColor or image[i][j] != start:
+                return
+            
+            image[i][j] = newColor         
+            dfs(image,row,col,i,j+1)
+            dfs(image,row,col,i+1,j)
+            dfs(image,row,col,i,j-1)
+            dfs(image,row,col,i-1,j) 
+            
+        dfs(image,row,col,sr,sc)
+        return image
+
+"""01 Matrix"""
+import collections
+class Solution:
+    def updateMatrix(self, matrix: List[List[int]]) -> List[List[int]]:
+        cols = len(matrix[0])
+        rows = len(matrix)
+        q = collections.deque()
+        dist = [ [float('inf') for _ in range(cols)] for _ in range(rows)]
+        for i in range(rows):
+            for j in range(cols):
+                if matrix[i][j] == 0:
+                    dist[i][j] = 0
+                    q.append((i,j))
+        while q:
+            x,y = q[0]
+            q.popleft()
+            stop = [(x+1,y),(x-1,y),(x,y+1),(x,y-1)]
+            for a,b in stop:
+                if 0<=a<rows and 0<=b<cols and dist[a][b]-dist[x][y] > 1:
+                    dist[a][b] = dist[x][y] +1
+                    q.append((a,b))
+        return dist
+
+"""Keys and Rooms"""
+class Solution:
+    def canVisitAllRooms(self, rooms: List[List[int]]) -> bool:
+        visited = {0:1}
+        stack = [0]
+        while stack != []:
+            keys = rooms[stack.pop(0)]
+            for i in keys:
+                if i not in visited:
+                    visited[i] = 1
+                    stack.append(i)
+        return len(visited) == len(rooms)

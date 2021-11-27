@@ -1,0 +1,370 @@
+"""Design LinkedList"""
+class MyLinkedList:
+
+    def __init__(self):
+
+        self.head = []
+
+    def get(self, index: int) -> int:
+
+        if index >= len(self.head):
+            return -1
+        return self.head[index]
+
+    def addAtHead(self, val: int) -> None:
+
+        self.head.insert(0, val)
+
+    def addAtTail(self, val: int) -> None:
+        
+        self.head.append(val)
+
+    def addAtIndex(self, index: int, val: int) -> None:
+        
+        if index == len(self.head):
+            self.head.append(val)
+        elif index > len(self.head):
+            pass
+        else:
+            self.head.insert(index, val)
+
+    def deleteAtIndex(self, index: int) -> None:
+        
+        if index < len(self.head):
+            self.head.pop(index)
+
+
+
+# Your MyLinkedList object will be instantiated and called as such:
+# obj = MyLinkedList()
+# param_1 = obj.get(index)
+# obj.addAtHead(val)
+# obj.addAtTail(val)
+# obj.addAtIndex(index,val)
+# obj.deleteAtIndex(index)
+
+"""Linked List Cycle"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def hasCycle(self, head: ListNode) -> bool:
+        if head is None:
+            return False
+        slow = head
+        fast = head.next
+        while fast is not None and fast.next is not None:
+            # if fast is None or fast.next is None:
+            #     return False
+            if fast.val == slow.val:
+                return True
+            else:
+                slow = slow.next
+                fast = fast.next.next
+        return False
+
+"""Linked List Cycle 2"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def detectCycle(self, head: ListNode) -> ListNode:
+        try:
+            slow = head 
+            fast = head.next
+            while fast is not slow and fast.next is not None:
+                slow = slow.next  
+                fast = fast.next.next
+        except:
+            return None
+        slow = slow.next
+        while head is not slow:
+            slow = slow.next
+            head = head.next
+        return head
+            
+"""Intersection of Two Linked Lists"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> ListNode:
+        first, second = headA , headB
+        while first != second:
+            if first:
+                first = first.next
+            else:
+                first = headB
+            if second:
+                second = second.next
+            else:
+                second = headA
+        return second
+
+"""Remove Nth Node From End of List"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        if head is None:
+            return 0
+    
+        first = second = head
+        length = 0
+        while first:
+            first = first.next
+            length += 1
+            if length - 1 > n:
+                second = second.next
+        if length == n:
+            return head.next
+        
+        else:
+            second.next = second.next.next
+            return head
+
+"""Reverse Linked List"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        cur_node = head
+        prev_node = None
+        next_node = None
+        
+        while cur_node != None:
+            next_node = cur_node.next
+            cur_node.next = prev_node
+            prev_node = cur_node
+            cur_node = next_node
+            
+        return prev_node
+
+"""Remove Linked List Elements"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def removeElements(self, head: ListNode, val: int) -> ListNode:
+        while head is not None and head.val == val:
+            head = head.next
+        temp = prev = head
+        while temp is not None:
+            if temp.val == val:
+                temp = temp.next
+                prev.next = temp
+            else:
+                prev = temp
+                temp = temp.next
+        return head        
+        
+        
+#         temp = head
+#         prev = None
+#         while temp is not None and temp.next is not None:
+
+#             if temp.val == val:
+#                 temp = temp.next.next
+#             temp = temp.next
+#         return head
+
+"""Odd Even Linked List"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def oddEvenList(self, head: ListNode) -> ListNode:
+        if head is None or head.next is None:
+            return head
+        odd = head
+        even = head.next
+        even_head = even
+        while even and even.next:
+            odd.next = even.next
+            odd = odd.next
+            even.next = odd.next
+            even = even.next
+
+        odd.next = even_head
+        return head
+
+"""Palindrome Linked List"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def isPalindrome(self, head: ListNode) -> bool:
+        if not head:
+            return True
+        temp = head
+        prev = None
+        res = []
+        while temp:
+            res.append(temp.val)
+            next = temp.next
+            temp.next = prev
+            prev = temp
+            temp = next
+        for i in res:
+            if i != prev.val:
+                return False
+            prev = prev.next
+        return True
+
+"""Merge Two Sorted Lists"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        if l1 is None:
+            return l2
+        
+        if l2 is None:
+            return l1
+        
+        if l1 == None and l2 == None:
+            return 0
+        
+        if l1.val < l2.val:
+            l1.next = self.mergeTwoLists(l1.next, l2)
+            return l1
+        
+        else:
+            l2.next = self.mergeTwoLists(l1, l2.next)
+            return l2
+"""Add Two Numbers"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -> ListNode:     
+        a = ''
+        b = ''
+        l3 = ListNode()
+        temp = l3
+        while l1:
+            t = str(l1.val)
+            a = t + a
+            l1 = l1.next
+        while l2:
+            t = str(l2.val)
+            b = t + b
+            l2 = l2.next
+        res = int(a) + int(b)
+        stop = 0
+        for i in str(res)[::-1]:
+            temp.val = i
+            if stop == len(str(res))-1:
+                break
+            temp.next = ListNode()
+            temp = temp.next
+            stop += 1
+        return l3
+"""Flatten a Multilevel Doubly Linked List"""
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val, prev, next, child):
+        self.val = val
+        self.prev = prev
+        self.next = next
+        self.child = child
+"""
+
+class Solution:
+    def flatten(self, head: 'Node') -> 'Node':
+        array = []
+        result = head
+        while head:
+            if head.child:
+                if head.next:
+                    array.append(head.next)
+                head.next = head.child
+                head.next.prev = head
+                head.child = None
+
+            elif head.next is None and len(array) != 0:
+                head.next = array.pop()
+                head.next.prev = head
+
+            head = head.next
+    
+        return result
+        
+"""Copy List with Random Pointer"""
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):
+        self.val = int(x)
+        self.next = next
+        self.random = random
+"""
+import copy
+class Solution:
+    def copyRandomList(self, head: 'Node') -> 'Node':
+        
+        return copy.deepcopy(head)
+"""Rotate List"""
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def rotateRight(self, head: ListNode, k: int) -> ListNode:
+        if head is None:
+            return head
+        temp = head
+        length = 0
+        while temp:
+            length += 1
+            temp = temp.next
+        
+        dummy = ListNode()
+        dummy.next = head
+        slow,fast = dummy, dummy.next
+        
+        k = k % length
+        if k == 0:
+            return head
+        else:
+            for _ in range(k):
+                fast = fast.next
+            slow = slow.next
+            
+            while fast.next:
+                fast = fast.next
+                slow = slow.next
+                
+            new_head = slow.next
+            fast.next = dummy.next
+            slow.next = None
+            return new_head
+

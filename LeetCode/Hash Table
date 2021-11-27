@@ -1,0 +1,452 @@
+"""Design HashSet"""
+class MyHashSet:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.sets = []
+
+    def add(self, key: int) -> None:
+        if key not in self.sets:
+            self.sets.append(key)
+
+    def remove(self, key: int) -> None:
+        if key in self.sets:
+            self.sets.remove(key)
+
+    def contains(self, key: int) -> bool:
+        """
+        Returns true if this set contains the specified element
+        """
+        return True if key in self.sets else False
+        
+        
+#     def __init__(self):
+#         """
+#         Initialize your data structure here.
+#         """
+#         self.box = [False] * 10000000
+
+#     def add(self, key: int) -> None:
+        
+#         self.box[key] = True
+        
+#     def remove(self, key: int) -> None:
+#         self.box[key] = False
+
+#     def contains(self, key: int) -> bool:
+#         """
+#         Returns true if this set contains the specified element
+#         """
+#         return self.box[key] == 1
+        
+
+
+# Your MyHashSet object will be instantiated and called as such:
+# obj = MyHashSet()
+# obj.add(key)
+# obj.remove(key)
+# param_3 = obj.contains(key)
+
+"""Design HashMap"""
+class MyHashMap:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.box = {}
+
+    def put(self, key: int, value: int) -> None:
+        """
+        value will always be non-negative.
+        """
+        self.box[key] = value
+
+    def get(self, key: int) -> int:
+        """
+        Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key
+        """
+        if key in self.box.keys():
+            return self.box[key]
+        else:
+            return -1
+    def remove(self, key: int) -> None:
+        """
+        Removes the mapping of the specified value key if this map contains a mapping for the key
+        """
+        if key in self.box.keys():
+            del self.box[key]
+        # self.box[key] = -1
+
+
+
+# Your MyHashMap object will be instantiated and called as such:
+# obj = MyHashMap()
+# obj.put(key,value)
+# param_2 = obj.get(key)
+# obj.remove(key)
+
+"""Contains Duplicate"""
+class Solution:
+    def containsDuplicate(self, nums: List[int]) -> bool:
+        seen = set()
+        for i in nums:
+            if i in seen: 
+                return True 
+            seen.add(i)
+        return False
+
+"""Single Number"""
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        res = {}
+        for i in nums:
+            if i not in res:
+                res[i] = 'malatec'
+            else:
+                res[i] = 'beynit'
+        for j in res:
+            if res[j] == 'malatec':
+                return j
+#         for i in nums:
+#             if nums.count(i) == 1:
+#                 return i
+
+"""Intersection of Two Arrays"""
+class Solution:
+    def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        return set(nums1) & set(nums2)
+
+"""Happy Number"""
+class Solution:
+    def isHappy(self, n: int) -> bool:
+        res = set()
+        while n != 1:
+            if n in res:
+                return False
+            res.add(n)
+            n = sum([pow(int(i),2) for i in str(n)])
+        return True
+        
+        
+
+        
+        
+#         def isHappy_helper(n, s):
+#             if n == 1:
+#                 return True
+#             if n in s:
+#                 return False
+#             s.add(n)
+#             result = 0
+#             while n > 0:
+#                 x = n % 10
+#                 result += x * x
+#                 n = n // 10
+#             return isHappy_helper(result, s)
+        
+#         s = set()
+#         return isHappy_helper(n, s)
+
+"""Two Sum"""
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        # res = [i for i in range(len(nums)) if target-nums[i] in nums and nums.index(i) != nums.index(target - nums[i])]        
+        # return res
+        dict = {} 
+        for i, num in enumerate(nums):
+            res = target - num
+            if res in dict:
+                return [dict[res], i]
+            else:
+                dict[num] = i
+        return dict
+
+"""Isomorphic Strings"""
+class Solution:
+    def isIsomorphic(self, s: str, t: str) -> bool:
+        res = {}
+        s_size = len(s)
+        for i in range(s_size):
+            if s[i] in res:
+                if res[s[i]] != t[i]:
+                    return False
+            elif t[i] in res.values():
+                return False
+            else:
+                res[s[i]] = t[i]
+        return True
+
+"""Minimum Index Sum of Two Lists"""
+class Solution:
+    def findRestaurant(self, list1: List[str], list2: List[str]) -> List[str]:
+        res = {}
+        for i in list1:
+            if i in list2:
+                index_sum = list1.index(i) + list2.index(i)
+                if index_sum in res.keys():
+                    res[index_sum] = res[index_sum] + [i]
+                else:
+                    res[index_sum] = [i]
+        return res[min(res.keys())]
+    
+        # arr = list(set(list1)&set(list2))
+        # if len(arr) == 1:
+        #     return arr
+        # elif len(arr) > 1:
+        #     indexs = {}
+        #     for i in arr:
+        #         index1 = list1.index(i)
+        #         index2 = list2.index(i)
+        #         max_sum = index1 + index2
+        #         indexs[max_sum] = i
+        #     return indexs[min(indexs.keys())]
+
+"""First Unique Character in a String"""
+class Solution:
+    def firstUniqChar(self, s: str) -> int:
+        data = list(s)
+        res = {}
+        for i in range(len(data)):
+            if data[i] in res.keys():
+                res[data[i]] += 1 
+            else:
+                res[data[i]] = 1
+        for i in res:
+            if res[i] == 1:
+                return data.index(i)
+        return -1
+
+"""Intersection of Two Arrays II"""
+class Solution:
+    def intersect(self, nums1: List[int], nums2: List[int]) -> List[int]:
+#         res1 = {}
+#         res2 = {}
+#         result = []
+#         for i in range(len(nums1)):
+#             res1[i] = nums1[i]
+#         for i in range(len(nums2)):
+#             res2[i] = nums2[i]
+#         for i in range(len(nums1)):
+#             if nums1[i] in res2.values() and nums1[i] not in result:
+#                     result.append(nums1[i])
+#                     res1.pop(i)
+
+#         return result
+
+
+        nums1.sort()
+        nums2.sort()
+        res = []
+        i = 0
+        j = 0
+        while i < len(nums1) and j < len(nums2):
+            if nums1[i] == nums2[j]:
+                res.append(nums1[i])
+                i += 1
+                j += 1
+            elif nums1[i] < nums2[j]:
+                i += 1
+            else:
+                j += 1
+        return res
+
+"""Contains Duplicate II"""
+class Solution:
+    def containsNearbyDuplicate(self, nums: List[int], k: int) -> bool:
+        res = {}
+        for i,j in enumerate(nums):
+            if j in res:
+                if abs(res[j] - i) <= k:
+                    return True
+            res[j] = i
+        return False
+        
+#         if len(nums) == len(set(nums)):
+#             return False
+#         for i in range(len(nums)):
+#             for j in range(i+1 , len(nums)):
+#                 if nums[i] == nums[j] and j - i <= k :
+#                     return True
+#         return False
+
+"""Group Anagrams"""
+import collections 
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        # res = {}
+        # for i in strs:
+        #     word = ''.join(sorted(i))
+        #     if word in res:
+        #         res[word].append(i)
+        #     else:
+        #         res[word] = [i]
+        # return res.values()
+
+        res = collections.defaultdict(list)
+        for i in strs:
+            res[''.join(sorted(i))].append(i)
+        return list(res.values())
+
+"""Valid Sudoku""" !!!
+from collections import defaultdict
+class Solution:
+    def isValidSudoku(self, board: List[List[str]]) -> bool:
+        col = defaultdict(dict)
+        row = defaultdict(dict)
+        res = defaultdict(dict)
+        for rowId in range(9):
+            for colId in range(9):
+                num = board[colId][rowId]
+                if num == ".":
+                    continue 
+                if num in row[rowId]:
+                    return False
+                row[rowId][num] = "one"
+                if num in col[colId]:
+                    return False
+                col[colId][num] = "one"
+                cur = f'{(colId//3)*3,(rowId//3)*3}'
+                if num in res[cur]:
+                    return False
+                res[cur][num] = "one"
+                
+        return True
+                    
+        
+        
+    
+        # result = []
+        # for i, row in enumerate(board):
+        #     for j, c in enumerate(row):
+        #         if c != '.':
+        #             result += [(c,j),(i,c),(i//3,j//3,c)]
+        # return len(result) == len(set(result))
+
+"""Find Duplicate Subtrees"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+from collections import defaultdict
+
+class Solution:
+    def findDuplicateSubtrees(self, root: TreeNode) -> List[TreeNode]:
+        res = []
+        dic = {}
+        def helper(root):
+            if not root:
+                return "None"
+            l = helper(root.left)
+            r = helper(root.right)
+            cur = str(root.val)+','+l+r
+            if cur not in dic:
+                dic[cur] = 1
+            else:
+                dic[cur] += 1
+                if dic[cur] == 2:
+                    res.append(root)
+            return cur
+        helper(root)
+        return res[::-1]
+
+"""Jewels and Stones"""
+class Solution:
+    def numJewelsInStones(self, J: str, S: str) -> int:
+        jew = list(set(J))
+        # result = []
+        return len([s for s in S if s in jew])
+        # for s in S:
+        #     if s in jew:
+        #         result.append(s)
+        # return len(result)
+
+"""Longest Substring Without Repeating Characters"""
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        res = 0
+        sub = ""
+        for i in s:
+            if i not in sub:
+                sub += i
+                res = max(res, len(sub))
+            else:
+                cur = sub.index(i)
+                sub = sub[cur+1:] + i
+        return res
+
+"""4Sum II"""
+class Solution:
+    def fourSumCount(self, A: List[int], B: List[int], C: List[int], D: List[int]) -> int:
+        dic = defaultdict(int)
+        count = 0
+
+        for i in A:
+            for j in B:
+                dic[i+j] += 1
+
+        for i in C:
+            for j in D:
+                count += dic[-(i+j)]
+
+        return count
+
+"""Top K Frequent Elements"""
+from collections import Counter
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        res = []
+        hash = Counter(nums)
+        for ky,vl in hash.most_common(k):
+                res.append(ky)
+        return res
+
+"""Insert Delete GetRandom O(1)"""
+import random 
+class RandomizedSet:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.res = set()
+
+    def insert(self, val: int) -> bool:
+        """
+        Inserts a value to the set. Returns true if the set did not already contain the specified element.
+        """
+        if val in self.res:
+            return False
+        else:
+            self.res.add(val)
+            return True
+                
+
+    def remove(self, val: int) -> bool:
+        """
+        Removes a value from the set. Returns true if the set contained the specified element.
+        """
+        if val in self.res:
+            self.res.remove(val)
+            return True
+        else:
+            return False
+            
+        
+
+    def getRandom(self) -> int:
+        """
+        Get a random element from the set.
+        """
+        return random.choice(tuple(self.res))
+
+
+# Your RandomizedSet object will be instantiated and called as such:
+# obj = RandomizedSet()
+# param_1 = obj.insert(val)
+# param_2 = obj.remove(val)
+# param_3 = obj.getRandom()

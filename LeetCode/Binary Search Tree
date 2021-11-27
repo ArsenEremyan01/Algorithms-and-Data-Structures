@@ -1,0 +1,255 @@
+"""Validate Binary Search Tree"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def isValidBST(self, root: TreeNode) -> bool:
+        self.prev = None
+        return self.help(root)
+    def help(self,root):
+        if root is None:
+            return True
+        if not self.help(root.left):
+            return False
+        if self.prev and self.prev.val >= root.val:
+            return False
+        self.prev = root
+        
+        return self.help(root.right)
+
+"""Binary Search Tree Iterator"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class BSTIterator:
+
+    def __init__(self, root: TreeNode):
+        self.stack = []
+        self.inorder(root)
+        
+    def inorder(self, root):
+        while root:
+            self.stack.append(root)
+            root = root.left
+    
+    def next(self) -> int:
+        """
+        @return the next smallest number
+        """
+        node = self.stack.pop()
+        if node.right:
+            self.inorder(node.right)
+        return node.val
+        
+        
+
+    def hasNext(self) -> bool:
+        """
+        @return whether we have a next smallest number
+        """
+        if len(self.stack) > 0:
+            return len(self.stack)
+
+# Your BSTIterator object will be instantiated and called as such:
+# obj = BSTIterator(root)
+# param_1 = obj.next()
+# param_2 = obj.hasNext()
+
+"""Search in a Binary Search Tree"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def searchBST(self, root: TreeNode, val: int) -> TreeNode:
+        if root:
+            if val > root.val:
+                return self.searchBST(root.right, val)
+            if val < root.val:
+                return self.searchBST(root.left, val)
+            else:
+                return root
+        return None
+
+"""Insert into a Binary Search Tree"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def insertIntoBST(self, root: TreeNode, val: int) -> TreeNode:
+        if root is None:
+            return TreeNode(val)
+        cur = root
+        while cur:
+            if cur.val > val:
+                if cur.left is not None:
+                    cur = cur.left
+                else:
+                    cur.left = TreeNode(val)
+                    break
+            else:
+                if cur.right is not None:
+                    cur = cur.right
+                else:
+                    cur.right = TreeNode(val)
+                    break
+        return root
+
+"""Delete Node in a BST"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def deleteNode(self, root: TreeNode, key: int) -> TreeNode:
+        if root is None:
+            return root
+        
+        if root.val == key:
+            if root.left is None and root.right is None:
+                return None
+            
+            
+            if root.left and root.right:
+                p = root.right
+                if p.left is None:
+                    p.left = root.left
+                    return p
+                q = p.left
+                while q.left:
+                    p = q
+                    q = q.left
+                p.left = q.right
+                
+                q.left = root.left
+                q.right = root.right
+                return q
+            
+            if root.left is None:
+                return root.right
+            if root.right is None:
+                return root.left
+                
+        
+        root.left = self.deleteNode(root.left, key)
+        root.right = self.deleteNode(root.right, key)
+        
+        return root
+
+"""Kth Largest Element in a Stream"""
+class KthLargest:
+
+    def __init__(self, k: int, nums: List[int]):
+        self.k = k
+        self.nums = nums
+        heapify(nums)
+    def add(self, val: int) -> int:
+        heappush(self.nums,val)
+        while len(self.nums) > self.k:
+            heappop(self.nums)
+        return self.nums[0]
+
+
+# Your KthLargest object will be instantiated and called as such:
+# obj = KthLargest(k, nums)
+# param_1 = obj.add(val)
+
+"""Lowest Common Ancestor of a Binary Search Tree"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        while root:
+            if p.val <= root.val <= q.val or q.val <= root.val <= p.val:
+                return root
+            if p.val < root.val and q.val < root.val:
+                root = root.left
+            else:
+                root = root.right
+        # def dfs(root,p,q):
+        #     if not root:
+        #         return None
+        #     if root == p or root == q:
+        #         return root
+        #     root_left = dfs(root.left,p,q)
+        #     root_right = dfs(root.right,p,q)
+        #     if root_left is not None and root_right is not None:
+        #         return root
+        #     if root_left:
+        #         return root_left
+        #     else:
+        #         return root_right
+        # return dfs(root,p,q)
+
+"""Contains Duplicate III"""
+class Solution:
+    def containsNearbyAlmostDuplicate(self, nums: List[int], k: int, t: int) -> bool:
+        if t == 0 and len(nums) == len(set(nums)): return False
+        
+        for i in range(len(nums)):
+            for j in range(i+1, min(i+k+1, len(nums))):
+                if abs(nums[i] - nums[j]) <= t:
+                    return True
+        return False
+        
+"""Balanced Binary Tree"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def height(self, node):
+        if node == None:
+            return True
+        leftH = self.height(node.left)
+        if leftH == False:
+            return False
+        rightH = self.height(node.right)
+        if rightH == False:
+            return False
+        if abs(leftH - rightH) > 1:
+            return False
+        else:
+            return max(leftH,rightH) + 1
+    def isBalanced(self, root: TreeNode) -> bool:
+        return self.height(root) != False
+
+"""Convert Sorted Array to Binary Search Tree"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def sortedArrayToBST(self, nums: List[int]) -> TreeNode:   
+        return self.helper(nums, 0, len(nums)-1)
+
+    def helper(self, nums, left, right):
+        if left > right:
+            return None
+        mid = (right + left) // 2
+        root = TreeNode(nums[mid])
+        root.left = self.helper(nums, left , mid-1)
+        root.right = self.helper(nums, mid+1, right)
+        return root

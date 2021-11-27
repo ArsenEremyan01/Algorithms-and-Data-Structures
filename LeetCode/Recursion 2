@@ -1,0 +1,362 @@
+"""Sort an Array"""
+import random
+class Solution:
+    def sortArray(self, nums: List[int]) -> List[int]:
+        if len(nums) <= 1:
+            return nums
+        else:
+            pivot = random.choice(nums)
+            left = []
+            a = []
+            right = []
+            for i in nums:
+                if i < pivot:
+                    left.append(i)
+                elif i > pivot:
+                    right.append(i)
+                else:
+                    a.append(i)
+                    
+            return self.sortArray(left) + a + self.sortArray(right)
+
+"""Validate Binary Search Tree"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def isValidBST(self, root: TreeNode) -> bool:
+        self.prev = None
+        return self.help(root)
+    def help(self,root):
+        if root is None:
+            return True
+        if not self.help(root.left):
+            return False
+        if self.prev and self.prev.val >= root.val:
+            return False
+        self.prev = root
+        
+        return self.help(root.right)
+
+"""Search a 2D Matrix II"""
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        row = len(matrix)
+        col = len(matrix[0])
+        for i in range(row):
+            for j in range(col):
+                if matrix[i][j] == target:
+                    return True
+                else:
+                    False
+
+"""N-Queens II""" !!!
+class Solution:
+    def totalNQueens(self, n: int) -> int:
+        def is_not_under_attack(row, col):
+            return not (rows[col] or horiz[row - col] or vertic[row + col])
+
+        def place(row, col):
+            rows[col] = 1
+            horiz[row - col] = 1
+            vertic[row + col] = 1
+
+        def remove(row, col):
+            rows[col] = 0
+            horiz[row - col] = 0
+            vertic[row + col] = 0
+
+        def backtrack(row=0, count=0):
+
+            for col in range(n):
+                if is_not_under_attack(row, col):
+                    place(row, col)
+                    if row + 1 == n:
+                        count += 1
+                    else:
+                        count = backtrack(row + 1, count)
+                    remove(row, col)
+            return count
+
+        rows = [0] * n
+        horiz = [0] * (2*n)
+        vertic = [0] * (2*n)
+
+        return backtrack()
+
+"""Sudoku Solver""" !!!
+class Solution:
+    def solveSudoku(self, board: List[List[str]]) -> None:
+        digits   = {*'123456789'}
+        cols     = [{*digits} for _ in range(9)]
+        rows     = [{*digits} for _ in range(9)]
+        boxes    = [{*digits} for _ in range(9)]
+        to_visit = {*()}
+
+        for i, row in enumerate(board):
+            for j, val in enumerate(row):
+                if val == '.':
+                    to_visit.add((i, j))
+                else:
+                    row, col, box = rows[i], cols[j], boxes[i//3*3 + j//3]
+                    row.discard(val)
+                    col.discard(val)
+                    box.discard(val)
+
+        def solve():
+            if not to_visit:
+                return True
+            x = y = minfree = choices = 10
+            for i, j in to_visit:
+                row, col, box = rows[i], cols[j], boxes[i//3*3 + j//3]
+                free = col & row & box
+                if len(free) < minfree:
+                    if len(free) == 0:
+                        return False
+                    x, y = j, i
+                    xrow = row
+                    xcol = col
+                    xbox = box
+                    choices = free
+                    minfree = len(free)
+
+            to_visit.discard((y, x))
+            for choice in choices:
+                board[y][x] = choice
+                xcol.discard(choice)
+                xrow.discard(choice)
+                xbox.discard(choice)
+                if solve():
+                    return True
+                xcol.add(choice)
+                xrow.add(choice)
+                xbox.add(choice)
+            to_visit.add((y, x))
+            return False
+
+        solve()
+#         def candidates(i, j):
+#             cands = set([str(i) for i in range(1, 10)]) 
+#             for col in range(len(board)): 
+#                 cands.discard(board[col][j]) 
+#             for col in range(len(board[i])): 
+#                 cands.discard(board[i][col]) 
+#             for col in range((i // 3) * 3, (i // 3) * 3 + 3): 
+#                 for l in range((j // 3) * 3, (j // 3) * 3 + 3): 
+#                     cands.discard(board[col][l])
+#             return list(cands) 
+
+#         for i in range(len(board)): 
+#             for j in range(len(board[i])): 
+#                 if board[i][j] == ".":
+#                     cands = candidates(i, j)
+#                     if len(cands) == 0: 
+#                         return False
+#                     else:
+#                         for cand in cands:
+#                             board[i][j] = cand 
+#                             test = self.solveSudoku(board)
+#                             if test: 
+#                                 return True
+#                             else:  
+#                                 pass
+#                         board[i][j] = "." 
+#                         return False 
+
+#         return True
+    
+
+"""Combinations"""
+class Solution:
+    def combine(self, n: int, k: int) -> List[List[int]]:
+        if not k or not n:
+            return None
+        res = []
+        def help(start,end):
+            if len(end) == k:
+                res.append(list(end))
+                return
+            for i in range(start,n + 1):
+                end.append(i)
+                help(i + 1,end)
+                end.pop()
+                
+        help(1,[])
+        return res
+
+"""Same Tree"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def isSameTree(self, p: TreeNode, q: TreeNode) -> bool:
+        if str(q) == str(p):
+            return True
+        else:
+            return False
+#         if p is None and q is None:
+#             return True
+#         if p is None or q is None:
+#             return False
+#         if p.val != q.val:
+#             return False
+        
+#         stack_p = [(p.left, p.right)]
+#         stack_q = [(q.left, q.right)]
+#         while stack_p and stack_q:
+#             nodes_p = stack_p.pop()
+#             nodes_q = stack_q.pop()
+#             lefts_p,rights_p = nodes_p
+#             lefts_q,rights_q = nodes_q
+
+#             if lefts_p != lefts_q:
+#                 return False
+#             if rights_p != rights_q:
+#                 return False
+#             stack_p.append((lefts_p.left,rights_p.right))
+            
+#             stack_q.append((lefts_q.left,rights_q.right))
+#         return True
+        # return self.isSameTree(p.right,q.right) and self.isSameTree(p.left,q.left)
+        
+
+"""Generate Parentheses"""
+class Solution:
+    def generateParenthesis(self, n: int) -> List[str]:
+        res = []
+        max_brk = 2 * n
+        def rec(brks = '', open_brk = 0, close_brk = 0):
+            if open_brk < n:
+                rec(brks+'(',open_brk+1,close_brk)
+                
+            if open_brk > close_brk:
+                rec(brks+')', open_brk,close_brk+1)
+                
+            if len(brks) == max_brk:
+                res.append(brks)
+                
+        rec()
+        return res
+
+"""Binary Tree Inorder Traversal"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def inorderTraversal(self, root: TreeNode) -> List[int]:
+        res = []
+        def rec(root):
+            if root is None:
+                return []
+            else:
+                rec(root.left)
+                res.append(root.val)
+                rec(root.right)
+        rec(root)
+        return res
+
+"""Binary Tree Level Order Traversal"""
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+        if root is None:
+            return []
+        res = []
+        def rec(lvl,root):
+            if root:
+                if lvl == len(res):
+                    res.append([])
+                res[lvl].append(root.val)
+                if root.left:
+                    rec(lvl+1,root.left)
+                if root.right:
+                    rec(lvl+1,root.right)
+        rec(0,root)
+        return res
+
+"""Largest Rectangle in Histogram""" !!!
+class Solution:
+    def largestRectangleArea(self, heights: List[int]) -> int:
+        s = 0
+        stack = []
+        heights = [0] + heights + [0]
+        for i in range(len(heights)):
+            while stack and heights[stack[-1]] > heights[i]:
+                j = stack.pop()
+                s = max(s, (i-stack[-1]-1)*heights[j])
+            stack.append(i)
+        return s
+
+"""Permutations"""
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        res = []
+        def help(nums,i):
+            if i == len(nums)-1:
+                res.append(nums[:])
+                return 
+            for j in range(i, len(nums)):
+                nums[i],nums[j] = nums[j],nums[i]
+                help(nums,i + 1)
+                nums[j],nums[i] = nums[i],nums[j]
+        help(nums,0)        
+        return res
+"""Letter Combinations of a Phone Number"""
+class Solution:
+    def letterCombinations(self, digits: str) -> List[str]:
+
+        if not digits:
+            return []
+        res = []        
+        dict = {"1":None,"2":["a","b","c"],"3":["d","e","f"],"4":["g","h","i"],
+                "5":["j","k","l"],"6":["m","n","o"],"7":["p","q","r","s"],
+                "8":["t","u","v"],"9":["w","x","y","z"]}
+            
+        def dfs(dict,digits,index,symbol,res):
+            if index == len(digits):
+                res.append(symbol)
+                return
+            for i in dict[digits[index]]:
+                dfs(dict,digits,index+1,symbol+i,res)       
+        dfs(dict,digits,0,"",res)
+        return res
+
+"""The Skyline Problem"""
+import bisect
+class Solution:
+    def getSkyline(self, buildings: List[List[int]]) -> List[List[int]]:
+        points = []
+        for Li, Ri, Hi in buildings:
+            points.append((Li, -Hi, 1))
+            points.append((Ri, Hi, -1))
+        points.sort()
+        pq = [0]
+        max_height =  0
+        key_points = []
+        for x, h, s in points:
+            if s == 1: # start point
+                if -h > max_height:
+                    max_height = -h
+                    key_points.append([x, -h])
+                bisect.insort_right(pq, -h)
+            else: # end point
+                pq.pop(bisect.bisect_left(pq, h))
+                pq_max = pq[-1]
+                if pq_max < max_height:
+                    max_height = pq_max
+                    key_points.append([x, max_height])
+        return key_points

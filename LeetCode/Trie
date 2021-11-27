@@ -1,0 +1,160 @@
+"""Implement Trie (Prefix Tree)"""
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.isWord = False
+
+class Trie:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.root = TrieNode()
+        
+
+    def insert(self, word: str) -> None:
+        """
+        Inserts a word into the trie.
+        """
+        node = self.root
+        for i in word:
+            if i not in node.children:
+                node.children[i] = TrieNode()
+            node = node.children[i]
+        node.isWord = True # Defining the word
+        
+
+    def search(self, word: str) -> bool:
+        """
+        Returns if the word is in the trie.
+        """
+        node = self.root
+        for i in word:
+            prev = None
+            if i not in node.children:
+                return False
+            prev = node
+            node = node.children[i]
+        return node.isWord # returns true if its a word else false
+        
+
+    def startsWith(self, prefix: str) -> bool:
+        """
+        Returns if there is any word in the trie that starts with the given prefix.
+        """
+        node = self.root
+        for i in prefix:
+            if i not in node.children:
+                return False
+            node = node.children[i]
+        return True
+        
+
+        
+
+
+# Your Trie object will be instantiated and called as such:
+# obj = Trie()
+# obj.insert(word)
+# param_2 = obj.search(word)
+# param_3 = obj.startsWith(prefix)
+
+"""Map Sum Pairs"""
+class MapSum:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.map = {}
+
+    def insert(self, key: str, val: int) -> None:
+        self.map[key] = val
+
+    def sum(self, prefix: str) -> int:
+        res = 0
+        for key in self.map:
+            if key.startswith(prefix):
+                res += self.map[key]
+            else :
+                continue
+        return res
+
+
+# Your MapSum object will be instantiated and called as such:
+# obj = MapSum()
+# obj.insert(key,val)
+# param_2 = obj.sum(prefix)
+
+"""Replace Words"""
+class Solution:
+    def replaceWords(self, dictionary: List[str], sentence: str) -> str:
+        dictionary.sort()
+        words = sentence.split()
+        for i in range(len(words)):
+            for j in dictionary:
+                if words[i][:len(j)] == j:
+                    words[i] = j
+                    break
+        res = " ".join(words)
+        return res
+                
+# key=lambda x: x.lower()
+
+"""Add and Search Word - Data structure design"""
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.end = False
+class WordDictionary:
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.root = TrieNode()
+
+    def addWord(self, word: str) -> None:
+        node = self.root
+        for i in word:
+            if i not in node.children:
+                node.children[i] = TrieNode()
+            node = node.children[i]
+        node.end = True
+
+    def search(self, word: str) -> bool:
+        stack = [(self.root, word)]
+        while stack:
+            node,word = stack.pop()
+            if not word:
+                if node.end:
+                    return True
+            elif word[0] in node.children:
+                cur = node.children[word[0]]
+                stack.append((cur,word[1:]))
+            elif word[0] == '.':
+                for cur in node.children.values():
+                    stack.append((cur,word[1:]))
+        return False
+            
+            
+# Your WordDictionary object will be instantiated and called as such:
+# obj = WordDictionary()
+# obj.addWord(word)
+# param_2 = obj.search(word)
+
+"""Maximum XOR of Two Numbers in an Array"""
+class Solution:
+    def findMaximumXOR(self, nums: List[int]) -> int:
+        L = len(bin(max(nums))[2:])
+        mask = 0
+        for i in range(L-1, -1, -1):
+            used = set()
+            new = mask | 1 << i
+            for num in nums:
+                work = new & num
+                if work ^ new in used:
+                    mask = new
+                    break
+                used.add(work)
+        return mask

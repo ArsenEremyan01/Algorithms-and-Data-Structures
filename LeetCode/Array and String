@@ -1,0 +1,306 @@
+"""Find Pivot Index"""
+class Solution:
+    def pivotIndex(self, nums: List[int]) -> int:
+        total = sum(nums)
+        left_total = 0
+        for i in range(len(nums)):
+            right_total = total - nums[i] - left_total
+            if left_total == right_total:
+                return i
+            left_total += nums[i]
+        return -1
+
+"""Largest Number At Least Twice of Others"""
+class Solution:
+    def dominantIndex(self, nums: List[int]) -> int:
+        # if len(nums) == 1:
+        #     return 0
+        # a = sorted(nums)
+        # if a[-1] >= 2*a[-2]:
+        #     return nums.index(a[-1])
+        # else:
+        #     return -1
+    
+        maxy = max(nums)
+        for i in nums:
+            if not maxy >= 2*i and maxy != i:
+                return -1
+        return nums.index(maxy)
+
+"""Plus One"""
+class Solution:
+    def plusOne(self, digits: List[int]) -> List[int]:
+        cur = ''
+        for i in digits:
+            cur += str(i)
+        cur = str(int(cur)+1)
+        if len(cur)<len(digits):
+            cur = cur.zfill(len(digits))
+        return [i for i in cur]
+
+"""Diagonal Traverse"""
+from collections import defaultdict
+class Solution:
+    def findDiagonalOrder(self, matrix: List[List[int]]) -> List[int]:
+        dic = defaultdict(list)
+        res = []
+        for i in range(len(matrix)):
+            for j in range(len(matrix[i])):
+                idx_sum = i + j
+                dic[idx_sum].append(matrix[i][j])       
+        for k,v in dic.items():
+            if k % 2 == 0:
+                res += v[::-1]
+            else:
+                res += v
+        return res
+
+"""Spiral Matrix""" !!!
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        i,first_r,first_c = 0,0,0
+        last_r,last_c = len(matrix) - 1, len(matrix[0]) - 1
+        res = []
+        while first_r <= last_r and first_c <= last_c:
+            for i in range(first_r,last_c + 1):
+                res.append(matrix[first_r][i])
+            first_r += 1
+            
+            for i in range(first_r,last_r + 1):
+                res.append(matrix[i][last_c])
+            last_c -= 1
+            
+            if first_r <= last_r:
+                i = last_c
+                while i >= first_c:
+                    res.append(matrix[last_r][i])
+                    i -= 1
+                last_r -= 1
+            if first_c <= last_c:
+                i = last_r
+                while i >= first_r:
+                    res.append(matrix[i][first_c])
+                    i -= 1
+                first_c += 1
+        return res
+
+"""Pascal's Triangle"""
+class Solution:
+    def generate(self, numRows: int) -> List[List[int]]:
+        res = []
+        for i in range(numRows):
+            level = []
+            for j in range(i+1):
+                if j == 0 or j == i:
+                    level.append(1)
+                else:
+                    val = res[-1][j] + res[-1][j-1]
+                    level.append(val)
+            res.append(level)
+        return res
+    
+    
+#         res = []
+#         for i in range(numRows):
+#             level = []
+#             for j in range(i+1):
+#                 if j == 0 or j == i:
+#                     level.append(1)
+#                 else:
+#                     val = res[-1][j] + res[-1][j-1]
+#                     level.append(val)
+#             res.append(level)
+#         return res
+
+"""Add Binary"""
+class Solution:
+    def addBinary(self, a: str, b: str) -> str:
+        int_sum = int(a,2) + int(b,2)
+        res = bin(int_sum)[2:]
+        return res
+
+"""Implement strStr()"""
+class Solution:
+    def strStr(self, haystack: str, needle: str) -> int:
+        return haystack.find(needle)
+
+"""Longest Common Prefix"""
+class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        if len(strs) == 0:
+            return '' 
+        res = ''
+        strs = sorted(strs)
+        for i in strs[0]:
+            if strs[-1].startswith(res+i):
+                res += i
+            else:
+                break
+        return res
+#         if len(strs) ==0:
+#             return ''
+#         if len(strs)==1:
+#             return strs[0]
+        
+#         strs.sort()
+        
+#         for i in range(len(strs[0])):
+#             if strs[0][i]==strs[len(strs)-1][i]:
+#                 continue
+#             else:
+#                 return strs[0][:i]
+#         return strs[0]
+
+"""Reverse String"""
+class Solution:
+    def reverseString(self, s: List[str]) -> None:
+        l = 0
+        r = len(s) - 1
+        while l < r:
+            cur = s[r]
+            s[r] = s[l]
+            s[l] = cur
+            r -= 1
+            l += 1
+
+"""Array Partition I"""
+class Solution:
+    def arrayPairSum(self, nums: List[int]) -> int:
+        nums.sort()
+        summ = 0
+        for i in range(0,len(nums),2):
+            summ += nums[i]
+        return summ
+
+"""Two Sum II - Input array is sorted"""
+class Solution:
+    def twoSum(self, numbers: List[int], target: int) -> List[int]:
+        start = 0
+        end = len(numbers)-1
+        while start < end:
+            if numbers[start] + numbers[end] == target:
+                break
+            elif numbers[start] + numbers[end] < target:
+                start += 1 
+            else:
+                end -= 1
+        return [start+1,end+1]
+
+"""Remove Element"""
+class Solution:
+    def removeElement(self, nums: List[int], val: int) -> int:
+        res = 0
+        for i in range(0, len(nums)): 
+            if nums[i] != val: 
+                nums[res] = nums[i] 
+                res += 1
+        return res 
+
+"""Max Consecutive Ones"""
+class Solution:
+    def findMaxConsecutiveOnes(self, nums: List[int]) -> int:
+        x = 0
+        y = 0
+        for i in range(len(nums)):
+            if nums[i] == 1:
+                y += 1
+            if nums[i] == 0:
+                x = max(x,y)
+                y = 0
+            if y > x:
+                x = y
+        return x
+
+"""Minimum Size Subarray Sum"""
+class Solution:
+    def minSubArrayLen(self, s: int, nums: List[int]) -> int:
+        left = summa = 0
+        res = inf
+        for right in range(len(nums)):
+            summa += nums[right]
+            while summa >= s:
+                if res > right - left + 1:
+                    res = right - left + 1
+                summa -= nums[left]
+                left += 1
+        if res == inf:
+            return 0
+        else:
+            return res
+
+"""Rotate Array"""
+class Solution:
+    def rotate(self, nums: List[int], k: int) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        # stop = len(nums)
+        # nums[:] = nums[stop-k:] + nums[:stop-k]
+        nums[:] = nums[k+1::1] + nums[:k+1] 
+
+"""Pascal's Triangle II"""
+class Solution:
+    def getRow(self, rowIndex: int) -> List[int]:
+        if rowIndex == 0:
+            return [1]
+        lastrow = self.getRow(rowIndex-1)
+        res = [1]
+        for i in range(len(lastrow)-1):
+            res.append(lastrow[i] + lastrow[i + 1])
+        res.append(1)
+        return res
+
+"""Reverse Words in a String"""
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        s1 = s.split()
+        s1 = s1[::-1]
+        res = ""
+        for i in s1:
+            res += i + " "
+        res = res.strip()
+        return res
+
+"""Reverse Words in a String III"""
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        s1 = s.split()
+        s1 = s1[::-1]
+        res = ""
+        for i in s1:
+            res += i + " "
+        res = res.strip()
+        return res[::-1]
+
+"""Remove Duplicates from Sorted Array"""
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        nums[:] = sorted(list(set(nums)))
+        return len(nums)
+        
+        # if len(nums) == 0:
+        #     return 0
+        # if len(nums) == 1:
+        #     return 1
+        # j = 0
+        # for i in range(len(nums)):
+        #     if nums[i] == nums[j]:
+        #         pass
+        #     else:
+        #         j += 1
+        #         nums[j] = nums[i]
+        # return j+1
+
+"""Move Zeroes"""
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        cur = 0
+        for i in range(len(nums)):
+            if nums[i] != 0:
+                nums[i],nums[cur] = nums[cur], nums[i] 
+                cur += 1
+        
+        # for i in nums:
+        #     if i == 0:
+        #         nums.remove(i)
+        #         nums.append(i)
